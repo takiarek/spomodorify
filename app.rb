@@ -5,6 +5,8 @@ REFRESH_TOKEN=ENV.fetch("SPOTIFY_REFRESH_TOKEN")
 CLIENT_ID=ENV.fetch("SPOTIFY_CLIENT_ID")
 CLIENT_SECRET=ENV.fetch("SPOTIFY_CLIENT_SECRET")
 
+VOLUME = 80
+
 print "Refreshing access token... "
 
 json_response = Net::HTTP.post_form(
@@ -44,6 +46,8 @@ def set_volume(volume, access_token)
   put_request(set_volume_url, access_token)
 end
 
+set_volume(VOLUME, access_token)
+
 start_playing_url = URI("https://api.spotify.com/v1/me/player/play")
 put_request(start_playing_url, access_token)
 
@@ -61,11 +65,11 @@ puts "(ง'̀-'́)ง You did great! (ง'̀-'́)ง"
 puts
 puts "~(˘▾˘~) Now go get some rest. ~(˘▾˘~)"
 
-50.times do |i|
-  set_volume(100 - i * 2, access_token)
+(VOLUME / 2).times do |i|
+  set_volume(VOLUME - i * 2, access_token)
 end
 
 pause_url = URI("https://api.spotify.com/v1/me/player/pause")
 
 put_request(pause_url, access_token)
-set_volume(100, access_token)
+set_volume(VOLUME, access_token)
