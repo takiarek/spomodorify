@@ -73,3 +73,5 @@ pause_url = URI("https://api.spotify.com/v1/me/player/pause")
 
 put_request(pause_url, access_token)
 set_volume(VOLUME, access_token)
+
+`osascript -e 'display notification "(ง'̀-'́)ง You did great! Now go get some rest. ~(˘▾˘~)" with title "Spomodorify"'` if ARGV[1] == "notify"
