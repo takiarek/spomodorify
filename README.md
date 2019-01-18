@@ -28,3 +28,7 @@ Open your Spotify, go to the Spomodorify folder and run:
 By default, it starts 25 minutes long Pomodoro. If you want to have a custom time you can provide it as a parameter:
 
 ```ruby app.rb 15```
+
+If you want to get a visual notification, add `notify` as a second argument:
+
+```ruby app.rb 25 notify```
