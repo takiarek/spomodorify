@@ -1,7 +1,7 @@
 # Spomodorify
 
 Spomodorify starts your Pomodoro by starting your Spotify player. After the Pomodoro is finished, Spomodorify gradually lowers the Spotify volume to 0, pauses the player and sets the volume to 100%.
-No distracting noises or visual notifications, just your favourite music fading away... ahh.
+No distracting noises or visual notifications*, just your favourite music fading away... ahh.
 
 This idea was inspired by a similar concept from [Noisli](https://www.noisli.com/).
 
@@ -29,6 +29,6 @@ By default, it starts 25 minutes long Pomodoro. If you want to have a custom tim
 
 ```ruby app.rb 15```
 
-If you want to get a visual notification, add `notify` as a second argument:
+*If you want to get a visual notification, add `notify` as a second argument:
 
 ```ruby app.rb 25 notify```
