@@ -51,27 +51,32 @@ set_volume(VOLUME, access_token)
 start_playing_url = URI("https://api.spotify.com/v1/me/player/play")
 put_request(start_playing_url, access_token)
 
+def finish_pomodoro(access_token)
+  puts
+  puts "(ง'̀-'́)ง You did great! (ง'̀-'́)ง"
+  puts
+  puts "~(˘▾˘~) Now go get some rest. ~(˘▾˘~)"
+  puts
+
+  (VOLUME / 2).times do |i|
+    set_volume(VOLUME - i * 2, access_token)
+  end
+
+  pause_url = URI("https://api.spotify.com/v1/me/player/pause")
+
+  put_request(pause_url, access_token)
+  set_volume(VOLUME, access_token)
+
+  `osascript -e 'display notification "(ง'̀-'́)ง You did great! Now go get some rest. ~(˘▾˘~)" with title "Spomodorify"'` if ARGV[1] == "notify"
+end
+
 minutes_input = ARGV[0]
-minutes = (minutes_input || 25).to_i
-seconds = minutes * 60
-(seconds).times do |i|
+minutes = (minutes_input || 25).to_f
+seconds = (minutes * 60).to_i
+(seconds * 2).times do |i|
   time_left = seconds - i
-  puts "#{time_left / 60}:#{time_left % 60}"
+  puts "#{time_left / 60}:#{time_left % 60}" if time_left > 0
+  finish_pomodoro(access_token) if time_left == 0
+  puts "-#{-time_left / 60}:#{-time_left % 60}" if time_left < 0
   sleep 1
 end
-
-puts
-puts "(ง'̀-'́)ง You did great! (ง'̀-'́)ง"
-puts
-puts "~(˘▾˘~) Now go get some rest. ~(˘▾˘~)"
-
-(VOLUME / 2).times do |i|
-  set_volume(VOLUME - i * 2, access_token)
-end
-
-pause_url = URI("https://api.spotify.com/v1/me/player/pause")
-
-put_request(pause_url, access_token)
-set_volume(VOLUME, access_token)
-
-`osascript -e 'display notification "(ง'̀-'́)ง You did great! Now go get some rest. ~(˘▾˘~)" with title "Spomodorify"'` if ARGV[1] == "notify"
