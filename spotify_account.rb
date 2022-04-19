@@ -1,17 +1,17 @@
-require 'net/http'
-require 'json'
+require_relative 'http_client'
 
 class SpotifyAccount
   REFRESH_TOKEN = ENV.fetch("SPOTIFY_REFRESH_TOKEN")
   CLIENT_ID = ENV.fetch("SPOTIFY_CLIENT_ID")
   CLIENT_SECRET = ENV.fetch("SPOTIFY_CLIENT_SECRET")
 
-  def initialize
+  def initialize(http_client: HTTPClient.new)
+    @http_client = http_client
     refresh_access_token
   end
 
   def access_token
-    refresh_access_token if access_token_age >= 45*60
+    refresh_access_token if access_token_expired?
 
     @access_token
   end
@@ -19,19 +19,24 @@ class SpotifyAccount
   private
 
   def refresh_access_token
-    url = URI("https://accounts.spotify.com/api/token")
+    url = "https://accounts.spotify.com/api/token"
     body = {
       grant_type: "refresh_token",
       refresh_token: REFRESH_TOKEN,
       client_id: CLIENT_ID,
-      client_secret: CLIENT_SECRET
+      client_secret: CLIENT_SECRET,
     }
 
-    json_response = Net::HTTP.post_form(url, body)
-    response = JSON.parse(json_response.body)
-
+    response = @http_client.post(url, body)
     @access_token_refreshed_at = Time.now
-    @access_token = response["access_token"]
+
+    response_body = JSON.parse(response.body)
+    @access_token_expiry_time = response_body["expires_in"] - 10
+    @access_token = response_body["access_token"]
+  end
+
+  def access_token_expired?
+    access_token_age >= @access_token_expiry_time
   end
 
   def access_token_age

@@ -1,18 +1,20 @@
-require 'net/http'
 require_relative 'spotify_account'
+require_relative 'http_client'
 
 class SpotifyAPI
-  def initialize(initial_volume:, account: SpotifyAccount.new)
+  URL_BASE = "https://api.spotify.com/v1/me/player"
+
+  def initialize(initial_volume:, account: SpotifyAccount.new, http_client: HTTPClient.new)
     @initial_volume = initial_volume
     @account = account
+    @http_client = http_client
 
     reset_volume
   end
 
   def play
-    play_url = URI("https://api.spotify.com/v1/me/player/play")
-
-    put_request(play_url)
+    path = "/play"
+    put_request(path)
   end
 
   def pause_with_fade_out
@@ -34,30 +36,24 @@ class SpotifyAPI
   end
 
   def set_volume(volume)
-    set_volume_url = URI("https://api.spotify.com/v1/me/player/volume?volume_percent=#{volume}")
-
-    put_request(set_volume_url)
-
+    path = "/volume?volume_percent=#{volume}"
+    put_request(path)
     @current_volume = volume
   end
 
   def pause
-    pause_url = URI("https://api.spotify.com/v1/me/player/pause")
-
-    put_request(pause_url)
+    path = "/pause"
+    put_request(path)
   end
 
-   def put_request(url)
-    http = Net::HTTP.new(url.host, url.port)
-    http.use_ssl = true
-
-    request = Net::HTTP::Put.new(url)
-
-    request["content-type"] = "application/json"
-    request["accept"] = "application/json"
-    request["Authorization"] = "Bearer #{access_token}"
-
-    http.request(request)
+  def put_request(path)
+    url = "#{URL_BASE}#{path}"
+    headers = {
+      "content-type" => "application/json",
+      "accept" => "application/json",
+      "Authorization" => "Bearer #{access_token}",
+    }
+    @http_client.put(url, headers)
   end
 
   def access_token
