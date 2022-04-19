@@ -1,15 +1,11 @@
 require 'net/http'
-require 'json'
+require_relative 'spotify_account'
 
 class SpotifyAPI
-  REFRESH_TOKEN = ENV.fetch("SPOTIFY_REFRESH_TOKEN")
-  CLIENT_ID = ENV.fetch("SPOTIFY_CLIENT_ID")
-  CLIENT_SECRET = ENV.fetch("SPOTIFY_CLIENT_SECRET")
-
-  def initialize(initial_volume:)
+  def initialize(initial_volume:, account: SpotifyAccount.new)
     @initial_volume = initial_volume
+    @account = account
 
-    refresh_access_token
     reset_volume
   end
 
@@ -51,22 +47,7 @@ class SpotifyAPI
     put_request(pause_url)
   end
 
-  def refresh_access_token
-    url = URI("https://accounts.spotify.com/api/token")
-    body = {
-      grant_type: "refresh_token",
-      refresh_token: REFRESH_TOKEN,
-      client_id: CLIENT_ID,
-      client_secret: CLIENT_SECRET
-    }
-
-    json_response = Net::HTTP.post_form(url, body)
-    response = JSON.parse(json_response.body)
-
-    @access_token = response["access_token"]
-  end
-
-  def put_request(url)
+   def put_request(url)
     http = Net::HTTP.new(url.host, url.port)
     http.use_ssl = true
 
@@ -74,8 +55,12 @@ class SpotifyAPI
 
     request["content-type"] = "application/json"
     request["accept"] = "application/json"
-    request["Authorization"] = "Bearer #{@access_token}"
+    request["Authorization"] = "Bearer #{access_token}"
 
     http.request(request)
+  end
+
+  def access_token
+    @account.access_token
   end
 end
