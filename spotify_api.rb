@@ -33,7 +33,7 @@ class SpotifyAPI
 
   def fade_out_volume
     (@current_volume / 2).times do |i|
-      set_volume(@current_volume - i * 2)
+      set_volume(@current_volume - 2)
     end
   end
 
