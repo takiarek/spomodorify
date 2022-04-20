@@ -1,7 +1,7 @@
 require_relative 'spotify_account'
 require_relative 'http_client'
 
-class SpotifyAPI
+class SpotifyPlayer
   URL_BASE = "https://api.spotify.com/v1/me/player"
 
   def initialize(initial_volume:, account: SpotifyAccount.new, http_client: HTTPClient.new)
