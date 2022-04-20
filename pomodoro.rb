@@ -6,6 +6,7 @@ class Pomodoro
   def run(minutes:, notify_of_end:)
     seconds = (minutes * 60).to_i
 
+    puts
     puts "ᕦ(ò_óˇ)ᕤ Time to get shit done! ᕦ(ò_óˇ)ᕤ"
     puts
 
