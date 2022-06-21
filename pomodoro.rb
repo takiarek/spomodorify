@@ -17,6 +17,7 @@ class Pomodoro
       puts "#{time_left / 60}:#{time_left % 60}" if time_left > 0
       finish_pomodoro(notify_of_end) if time_left == 0
       puts "-#{-time_left / 60}:#{-time_left % 60}" if time_left < 0
+      @media_player.play_with_fade_in if time_left == -15
       sleep 1
     end
   end

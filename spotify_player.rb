@@ -17,6 +17,12 @@ class SpotifyPlayer
     put_request(path)
   end
 
+  def play_with_fade_in
+    mute
+    play
+    fade_in_volume
+  end
+
   def pause_with_fade_out
     fade_out_volume
     pause
@@ -35,6 +41,12 @@ class SpotifyPlayer
     end
   end
 
+  def fade_in_volume
+    (@initial_volume / 2).times do |i|
+      set_volume(@current_volume + 2)
+    end
+  end
+
   def set_volume(volume)
     path = "/volume?volume_percent=#{volume}"
     put_request(path)
@@ -44,6 +56,10 @@ class SpotifyPlayer
   def pause
     path = "/pause"
     put_request(path)
+  end
+
+  def mute
+    set_volume(0)
   end
 
   def put_request(path)
