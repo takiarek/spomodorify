@@ -42,8 +42,8 @@ class SpotifyPlayer
   end
 
   def fade_in_volume
-    (@initial_volume / 2).times do |i|
-      set_volume(@current_volume + 2)
+    (@initial_volume).times do |i|
+      set_volume(@current_volume + 1)
     end
   end
 
