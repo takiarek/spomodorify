@@ -20,6 +20,8 @@ class Pomodoro
       @media_player.play_with_fade_in if time_left == -5
       sleep 1
     end
+
+    puts "Ended at #{Time.now.strftime("%k:%M:%S")}"
   end
 
   private
